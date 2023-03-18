@@ -1,0 +1,24 @@
+.search-and-filter {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.search-and-filter input[type="text"] {
+  width: 200px;
+  height: 32px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+}
+
+.search-and-filter select {
+  width: 120px;
+  height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  margin-left: 10px;
+}
