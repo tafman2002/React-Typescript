@@ -47,36 +47,68 @@ interface MyComponentProps {
     style?: React.CSSProperties;
 }
 
-
+// Successful DnD created in Typescript
+// In summary, there are three containers and based on the containers, the tasks are displayed
+// in the containers based on their status
 export const Dashboard: FC = () => {
     const [tasks, setTasks] = useState<Task[]>(initialTasks);
-    const [parent, setParent] = useState<any>(null);
-    const containers = ['A', 'B', 'C'];
-    const draggableMarkup = (
-        <Draggable id="draggable">Drag me</Draggable>
-    );
+    const [parent, setParent] = useState<string | null>(null);
+    const containers = ['Not-Started', 'In-Progress', 'Completed'];
+    // Creates a draggable for each task
+    // const draggableMarkup = tasks.map((item) => (
+    //     <Draggable id={item.id}>{item.title}</Draggable>
+    // ));
 
+    // Handles the drag end event
     function handleDragEnd(event: DragEndEvent) {
-       const {over} = event;
-       setParent(over ? over.id : null);
+        const {over} = event;
+        console.log('over is ', over);
+        if (over) {
+            // Find the task that was dragged
+            console.log('event id is ', event.active.id)
+            const draggedTask = tasks.find((task) => task.id === event.active.id);
+            console.log('dragged task was ', draggedTask)
+            if (draggedTask) {
+                // The task's status is updated using the container's id which is either Not-Started
+                // In-Progress, or Completed
+                const newTasks = tasks.map((task) => {
+                    if (task.id === draggedTask.id) {
+                        return {...task, status: String(over.id)};
+                    }
+                    return task;
+                });
+                setTasks(newTasks);
+            }
+            setParent(String(over.id));
+        } else {
+            setParent(null);
+        }
     }
 
+
+    console.log(parent +' parent type' + typeof parent);
+
+    // In this updated code, we're mapping over the tasks array for each container, and returning a Draggable component
+    // only if the task's status matches the current container id. If the status property of a task matches a container's id,
+    // the Draggable is rendered within that Droppable, otherwise it's not rendered at all.
     return (
         <DndContext onDragEnd={handleDragEnd}>
-            {parent === null ? draggableMarkup : null}
-
             {containers.map((id) => (
-                // We updated the Droppable component so it would accept an `id`
-                // prop and pass it to `useDroppable`
-                <>
+                <div key={id}>
                     <h1>{id}</h1>
-                <Droppable key={id} id={id}>
-                    {parent === id ? draggableMarkup : 'Drop here'}
-                </Droppable>
-                </>
+                    <Droppable id={id}>
+                        {tasks.map((task) => {
+                            if (task.status === id) {
+                                return <Draggable key={task.id} id={task.id}>{task.title}</Draggable>;
+                            }
+                            return null;
+                        })}
+                    </Droppable>
+                </div>
             ))}
         </DndContext>
     );
+
 
 
 };

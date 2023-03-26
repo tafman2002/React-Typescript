@@ -7,7 +7,7 @@ interface props {
 }
 export const Draggable: FC<props> = (props) => {
     const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id: props.id,
+        id: props.id
     });
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
