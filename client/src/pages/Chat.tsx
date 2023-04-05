@@ -1,5 +1,9 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import './Chat.scss';
+import User  from '../assets/user.svg';
+import  Send from '../assets/send.svg';
+import Bot from '../assets/bot.svg';
+
 
 export const ChatGPTApp = () => {
     const [input, setInput] = useState<string>('');
@@ -34,32 +38,40 @@ export const ChatGPTApp = () => {
             })
         .catch((error) => {
             console.error('Error:', error);
-            setOnChat(false)
+            setOnChat(false);
         });
         setInput('');
     };
 
     return (
-        <div className="App">
+        <div className="Chat-App">
             <h1>Chatbot</h1>
             <div className="chat-container">
-                {messages.map((msg, index) => (
-                    <div key={index}>
-                        <p>{msg}</p>
-                        {/*<button onClick={handleClick}>Copy</button>*/}
+                {messages.length !== 0 && messages.map((msg, index) => (
+                    <div key={index} className="message">
+                        <img src={User} alt="User" className="user-avatar" />
+                        <p className="message-text">{msg}</p>
                     </div>
                 ))}
             </div>
-            <form onSubmit={handleSubmit} className="input-container">
-                <input
-                    type="text"
-                    value={input}
-                    onChange={handleInputChange}
-                    placeholder="Type your message..."
-                />
-                <button disabled={onChat} type="submit">Send</button>
-            </form>
-            {onChat && <div className="loader"><p>Loading...</p></div>}
+            <div className="input-container">
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={handleInputChange}
+                        placeholder="Type your message..."
+                    />
+                    <button disabled={onChat} type="submit">
+                        <img src={Send} className="send-icon" alt="Send" />
+                    </button>
+                </form>
+                {onChat && (
+                    <div className="loader">
+                        <img src={Bot} alt={"Bot"} /> <p>Loading...</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
